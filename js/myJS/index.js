@@ -51,8 +51,42 @@ API_llamada("regions")
 	});
 
 
-function paisSeleccionado(){
 
+
+
+function paisSeleccionado(){
+	let pais= this.selectedOptions[0].textContent;
+	let codPais= this.selectedOptions[0].value;
+
+	let spans= document.getElementsByClassName("nivelMundial");
+	if(codPais!=0)
+		for(let i=0;i<spans.length;i++)
+			spans[i].innerHTML= "("+pais+")";
+	else
+		for(let i=0;i<spans.length;i++)
+			spans[i].innerHTML= "a nivel mundial";
+
+
+	let confirmadosPais=0;
+	let activosPais=0;
+	let muertesPais=0;
 
 	
+	API_llamada("reports?iso="+codPais)
+		.then(function(data){
+			let datos= data.datos.data;
+			for(let i=0;i<datos.length;i++){
+				confirmadosPais= confirmadosPais+datos[i].confirmed;
+				activosPais= activosPais+datos[i].active;
+				muertesPais= muertesPais+datos[i].deaths;
+			}
+			confirmados.innerHTML= Intl.NumberFormat('es-ES').format(confirmadosPais);
+			activos.innerHTML= Intl.NumberFormat('es-ES').format(activosPais);
+			muertes.innerHTML= Intl.NumberFormat('es-ES').format(muertesPais);
+		})
+
+
+
+
+
 }
